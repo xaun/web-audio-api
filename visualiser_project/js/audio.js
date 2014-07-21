@@ -14,6 +14,9 @@ var Audio = {
       alert('Web Audio API is not supported in this browser');
     }
   },
+  audiourl: "assets/VersionsModerat.mp3",
+  audioData: null,
+  audioPlaying: false,
   sampleSize: 1024,
   setupPhaserNodes: function() {
     Audio.tuna = new Tuna(Audio.audioContext);
@@ -28,17 +31,42 @@ var Audio = {
     Audio.sourceNode = Audio.audioContext.createBufferSource();
     Audio.analyserNode = Audio.audioContext.createAnalyser();
   },
-  connectAudioNodes: function() {
+  connectPhaserNodes: function() {
     Audio.sourceNode.connect(Audio.phaser.input);
     Audio.phaser.connect(audioContext.destination);
     Audio.phaser.connect(analyserNode);
   },
+  getFrequencies: function() {
+    var frequencyAmplitudeArray = new Uint8Array(Audio.analyserNode.frequencyBinCount);
+    Audio.analyserNode.getByteFrequencyData(frequencyAmplitudeArray);
+    return frequencyAmplitudeArray;
+  },
+  loadSound: function(url) {
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.responseType = 'arraybuffer';
 
+    request.onload = function() {
+      Audio.AudioContext.decodeAudioData(request.response, function (buffer) {
+        Audio.audioData = buffer;
+        playSound(audioData);
+      }, onError);
+    }
+    request.send();
+  },
+  playSound: function(buffer) {
+    Audio.sourceNode.buffer = buffer;
+    Audio.sourceNode.start(0);
+    Audio.sourceNode.loop = true;
+    Audio.audioPlaying = true;
+  },
+  onError: function(e) {
+    console.log(e);
+  }
 };
 
 $(document).ready(function() {
 
-Audio.frequencyAmplitudeArray = new Uint8Array(Audio.analyserNode.frequencyBinCount);
-Audio.amplitudeArray = new Uint8Array(Audio.analyserNode.frequencyBinCount);
+
 
 });
