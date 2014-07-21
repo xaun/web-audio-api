@@ -14,31 +14,59 @@ var Audio = {
       alert('Web Audio API is not supported in this browser');
     }
   },
+  monkeyPatches: function () {
+    Audio.audioContext.createGainNode = Audio.audioContext.createGain;
+    Audio.audioContext.createDelayNode = Audio.audioContext.createDelay;
+    Audio.audioContext.createJavaScriptNode = Audio.audioContext.createScriptProcessor;
+  },
   audioUrl: "assets/VersionsModerat.mp3",
   audioData: null,
   audioPlaying: false,
   sampleSize: 1024,
-  setupPhaserNodes: function () {
-    // Monkey patches for Tuna
-    Audio.audioContext.createGainNode = Audio.audioContext.createGain;
-    Audio.audioContext.createDelayNode = Audio.audioContext.createDelay;
-    Audio.audioContext.createJavaScriptNode = Audio.audioContext.createScriptProcessor;
+  setupAudioNodes: function () {
     Audio.tuna = new Tuna(Audio.audioContext);
     Audio.phaser = new Audio.tuna.Phaser({
-      rate: 1.2,                     //0.01 to 8 is a decent range, but higher values are possible
-      depth: 0.3,                    //0 to 1
-      feedback: 0.2,                 //0 to 1+
+      rate: 0.5,                     //0.01 to 8 is a decent range, but higher values are possible
+      depth: 0.6,                     //0 to 1
+      feedback: 0.3,                 //0 to 1+
       stereoPhase: 30,               //0 to 180
       baseModulationFrequency: 700,  //500 to 1500
-      bypass: 0
+      bypass: 1
+    });
+    Audio.overdrive = new Audio.tuna.Overdrive({
+      outputGain: 0.5,         //0 to 1+
+      drive: 0.1,              //0 to 1
+      curveAmount: 1,          //0 to 1
+      algorithmIndex: 1,       //0 to 5, selects one of our drive algorithms
+      bypass: 1
+    });
+    Audio.tremolo = new Audio.tuna.Tremolo({
+      intensity: 1,    //0 to 1
+      rate: 8,         //0.001 to 8
+      stereoPhase: 0,    //0 to 180
+      bypass: 1
+    });
+    Audio.chorus = new Audio.tuna.Chorus({
+      rate: 5.5,         //0.01 to 8+
+      feedback: 0.9,     //0 to 1+
+      delay: 1.0000,     //0 to 1
+      bypass: 1          //the value 1 starts the effect as bypassed, 0 or 1
     });
     Audio.sourceNode = Audio.audioContext.createBufferSource();
     Audio.analyserNode = Audio.audioContext.createAnalyser();
+    Audio.gainNode = Audio.audioContext.createGain();
   },
-  connectPhaserNodes: function () {
+  connectAudioNodes: function () {
+    Audio.sourceNode.connect(Audio.overdrive.input);
     Audio.sourceNode.connect(Audio.phaser.input);
-    Audio.phaser.connect(Audio.audioContext.destination);
-    Audio.phaser.connect(Audio.analyserNode);
+    Audio.sourceNode.connect(Audio.tremolo.input);
+    Audio.sourceNode.connect(Audio.chorus.input);
+    Audio.overdrive.connect(Audio.gainNode);
+    Audio.phaser.connect(Audio.gainNode);
+    Audio.tremolo.connect(Audio.gainNode);
+    Audio.chorus.connect(Audio.gainNode);
+    Audio.gainNode.connect(Audio.audioContext.destination);
+    Audio.gainNode.connect(Audio.analyserNode);
   },
   getFrequencyDomain: function () {
     var frequencyData = new Uint8Array(Audio.analyserNode.frequencyBinCount);
@@ -75,6 +103,7 @@ var Audio = {
 
 $(document).ready(function () {
   Audio.audioContextSetup();
+  Audio.monkeyPatches();
 
 
   $("#start").on('click', function (e) {
@@ -82,8 +111,8 @@ $(document).ready(function () {
     console.log('playing')
 
 
-    Audio.setupPhaserNodes();
-    Audio.connectPhaserNodes();
+    Audio.setupAudioNodes();
+    Audio.connectAudioNodes();
 
     if (Audio.audioData == null) {
       Audio.loadSound(Audio.audioUrl);
