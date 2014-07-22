@@ -23,14 +23,18 @@ var Audio = {
   audioData: null,
   audioPlaying: false,
   sampleSize: 1024,
+  phaserOn: false,
+  overdriveOn: false,
+  tremoloOn: false,
+  chorusOn: false,
   setupAudioNodes: function () {
     Audio.tuna = new Tuna(Audio.audioContext);
     Audio.phaser = new Audio.tuna.Phaser({
-      rate: 0.5,                     //0.01 to 8 is a decent range, but higher values are possible
-      depth: 0.6,                     //0 to 1
-      feedback: 0.3,                 //0 to 1+
+      rate: 3,                     //0.01 to 8 is a decent range, but higher values are possible
+      depth: 1,                     //0 to 1
+      feedback: 0.7,                 //0 to 1+
       stereoPhase: 30,               //0 to 180
-      baseModulationFrequency: 700,  //500 to 1500
+      baseModulationFrequency: 900,  //500 to 1500
       bypass: 1
     });
     Audio.overdrive = new Audio.tuna.Overdrive({
@@ -105,11 +109,10 @@ $(document).ready(function () {
   Audio.audioContextSetup();
   Audio.monkeyPatches();
 
-
+  // Start audio
   $("#start").on('click', function (e) {
     e.preventDefault();
-    console.log('playing')
-
+    console.log('playing..')
 
     Audio.setupAudioNodes();
     Audio.connectAudioNodes();
@@ -121,9 +124,80 @@ $(document).ready(function () {
     }
   });
 
+  // Stop audio
   $("#stop").on('click', function (e) {
     e.preventDefault();
+    console.log('stopping..')
     Audio.sourceNode.stop(0);
     Audio.audioPlaying = false;
   });
+
+  //-------------- PHASER FX ------------------------ //
+  // ON/OFF
+  $('#phaser-onoff').on('click', function () {
+    if (Audio.phaserOn == false) {
+      Audio.phaser.bypass = 0;
+      Audio.phaserOn = true;
+      console.log('phaser on');
+    } else {
+      Audio.phaser.bypass = 1;
+      Audio.phaserOn = false;
+      console.log('phaser off')
+    }
+  });
+
+  // Rate
+  $('#rate').on('change', function () {
+    Audio.phaser.rate = $(this).val()
+  });
+
+  // Depth
+
+
+  // Overdrive FX on/off
+  $('#overdrive-onoff').on('click', function() {
+    if (Audio.overdriveOn == false) {
+      Audio.overdrive.bypass = 0;
+      Audio.overdriveOn = true;
+      console.log('overdrive on');
+    } else {
+      Audio.overdrive.bypass = 1;
+      Audio.overdriveOn = false;
+      console.log('overdrive off');
+    }
+  });
+
+  // Tremolo FX on/off
+  $('#tremolo-onoff').on('click', function () {
+    if (Audio.tremoloOn == false) {
+      Audio.tremolo.bypass = 0;
+      Audio.tremoloOn = true;
+      console.log('tremolo on');
+    } else {
+      Audio.tremolo.bypass = 1;
+      Audio.tremoloOn = false;
+      console.log('tremolo off');
+    }
+  });
+
+  // Chorus FX on/off
+  $('#chorus-onoff').on('click', function () {
+    if (Audio.chorusOn == false) {
+      Audio.chorus.bypass = 0;
+      Audio.chorusOn = true;
+      console.log('chorus on');
+    } else {
+      Audio.chorus.bypass = 1
+      Audio.chorusOn = false;
+      console.log('chorus on');
+    }
+  });
+
+  $('#rate ')
 });
+
+
+
+
+
+

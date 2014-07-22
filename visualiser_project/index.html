@@ -6,17 +6,35 @@
 </head>
 <body>
   <h1>Audio Analysis & Effects</h1>
-  <p>
-    <input type="button" id="start" value="Start">
-    &nbsp; &nbsp;
-    <input type="button" id="stop" value="Stop">
-  </p>
+  <div class="controls">
+    <p>
+      <input type="button" id="start" value="Start">
+      <input type="button" id="stop" value="Stop">
+    </p>
+    <p>
+      <input type="button" id="phaser-onoff" value="phaser">
+      <input type="range" id="rate" min="0.01" max="10.1" value="0">
+      <input type="range" id="depth" value="">
+      <input type="range" id="" value="">
+      <input type="range" id="" value="">
+      <input type="range" id="" value="">
+    </p>
+    <p>
+      <input type="button" id="tremolo-onoff" value="tremolo">
+    </p>
+    <p>
+      <input type="button" id="chorus-onoff" value="chorus">
+    </p>
+    <p>
+      <input type="button" id="overdrive-onoff" value="overdrive">
+    </p>
+  </div>
 
   <style>
-    #controls, h1 {
+    .controls, h1 {
       text-align: center;
     }
-    #start, #stop {
+    .controls  {
       font-size: 16pt;
     }
   </style>
