@@ -3,9 +3,9 @@ I am passionate about Audio, specifically digital sound & processing.
 Since I've been introduced to the WebAudioAPI and technologies like WebGL and Three.js, I am very excited for the future of interactive media in the browser.
 
 ### Contents:
-- freq_domain_visualiser: Real-Time Frequency Domain audio analysis with 2D canvas visualisations.
-- time_domain_visualiser: Real-Time Time Domain audio analysis with 2D canvas visualisations.
-- sound_factory_object: A nicer way to write the code using an object filled with functions, with a HTML5 player good to go. This code does not include the 2D canvasing, just both methods of audio analysis ready to be called.
+- **freq_domain_visualiser**: Real-Time Frequency Domain audio analysis with 2D canvas visualisations.
+- **time_domain_visualiser**: Real-Time Time Domain audio analysis with 2D canvas visualisations.
+- **sound_factory_object**: A nicer way to write the code using an object filled with functions, with a HTML5 player good to go. This code does not include the 2D canvasing, just both methods of audio analysis ready to be called.
 
 ### Coming soon (hopefully)..
 - High pass filter
