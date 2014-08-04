@@ -10,16 +10,8 @@ Since I've been introduced to the WebAudioAPI and technologies like WebGL and Th
 ### Coming soon (hopefully)..
 - High pass filter
 - Low pass filter
+- Custom audio player
 
-
-
-
-## `<audio>` html5 tag limitation
-- No precise timing controls
-- Very low limit for the number of sounds played at once
-- No way to reliably pre-buffer a sound
-- No ability to apply real-time effects
-- No way to analyze sounds
 
 
 ## types of webaudio nodes
@@ -63,8 +55,7 @@ Bitrate is a measure of data throughput in a given amount of time. Simply put, i
 ## Audio Context
 In order to start using the API, we must first create an AudioContext. Think of this as a **canvas for sound**. It’s a container for all the playback and manipulation of audio we’re going to be doing. We create it by simply doing this:
 ```
-var context = new webkitAudioContext();
-    // We use the "webkit" prefix as the API isn't a standard yet
+var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 ```
 
 
@@ -83,7 +74,7 @@ The actual number of bins (bands) in this example would be 16. As it is divided 
 
 
 ## Creating an Audio Object
-This is fairly self explainitory:
+Great feature for using an audio object is that it can be rendered to the DOM in the form a HTML5 Audio Player!
 ```
 // creating an Audio object
   var audio0 = new Audio();
@@ -93,6 +84,10 @@ This is fairly self explainitory:
   audio0.loop = true;
 ```
 
+## HTML5 Audio Player
+Appending an Audio() object to the DOM:
+
+`$('#empty-div').append(Sound.audio0);`
 
 ## Creating the Source, and connecting the nodes.
 
