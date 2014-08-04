@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>rt_timeAnalysis</title>
+  </head>
+  <body>
+    <h1>Real-Time Time Domain Analysis</h1>
+    <canvas id="canvas" width="512" height="256" ></canvas>
+
+    <p id="controls">
+      <input type="button" id="start" value="Start">
+      &nbsp; &nbsp;
+      <input type="button" id="stop" value="Stop">
+    </p>
+
+
+
+    <style>
+      #canvas {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        background-color: black;
+      }
+      #controls, h1 {
+        text-align: center;
+      }
+      #start, #stop {
+        font-size: 16pt;
+      }
+    </style>
+
+    <script src="js/jquery.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
